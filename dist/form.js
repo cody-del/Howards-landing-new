@@ -7,7 +7,22 @@ const CALL_US = 'We couldn’t confirm your request. Please call (303) 449-4337 
 const MIN_FILL_MS = 3000;
 // The same email pattern consultation.mjs and the main site accept.
 const EMAIL = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
+// Google Ads conversion "SS - Submit Lead Form". No user data is sent with it:
+// Howard's privacy policy does not list advertising platforms among the
+// parties personal data is shared with.
+const LEAD_CONVERSION = 'AW-11359789040/EwciCLOgwJMdEPC_4qgq';
 let pending = false;
+
+// Reported only for a lead GHL confirmed. The transaction id is keyed by the
+// contact id, which GHL reuses when the same person submits again, so Google
+// counts that person once. Tracking must never hold up or break the form.
+function reportLeadConversion(contactId) {
+  try {
+    if (typeof window.gtag === 'function') window.gtag('event', 'conversion', {send_to: LEAD_CONVERSION, transaction_id: `lead_${contactId}`});
+  } catch {
+    // A blocked or broken tag skips the conversion; the lead is already in GHL.
+  }
+}
 
 function fieldError(name) {
   const value = form.elements[name].value.trim();
@@ -63,6 +78,7 @@ form.addEventListener('submit', async event => {
     });
     const result = await response.json();
     if (!response.ok || result.success !== true) throw new Error(result.error || CALL_US);
+    reportLeadConversion(result.contactId);
     form.hidden = true;
     form.reset();
     const success = document.querySelector('#consultation-success');
