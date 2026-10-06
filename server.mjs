@@ -10,15 +10,16 @@ const root = fileURLToPath(new URL('./dist/', import.meta.url));
 const port = 4319;
 const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp'};
 
-// --mock answers the way howardsdraperies.com/api/leads/ does instead of
-// sending the lead, so the form can be tried without creating a GHL contact.
+// --mock answers the way GHL's contact upsert does instead of sending the
+// lead, so the form can be tried without credentials or creating a contact.
 const mock = process.argv.includes('--mock');
+const mockEnv = {GHL_PRIVATE_TOKEN: 'mock-token', GHL_LOCATION_ID: 'mock-location'};
 const mockFetch = async (url, request) => {
   console.log(`[mock] Not sent to ${url}:`, JSON.parse(request.body));
-  return Response.json({success: true, contactId: 'mock-contact'});
+  return Response.json({new: true, contact: {id: 'mock-contact'}});
 };
 const handle = createConsultationHandler(mock
-  ? (data, options) => submitConsultation(data, {...options, fetcher: mockFetch})
+  ? (data, options) => submitConsultation(data, {...options, fetcher: mockFetch, env: mockEnv})
   : submitConsultation);
 
 http.createServer(async (req, res) => {
