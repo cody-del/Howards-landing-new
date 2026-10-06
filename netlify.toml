@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "node --test consultation.test.mjs consultation-http.test.mjs"
+  command = "node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs"
 
 [build.environment]
   NODE_VERSION = "22"

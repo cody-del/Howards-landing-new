@@ -4,7 +4,7 @@ Standalone motorized-shades landing page for Boulder and the Front Range, served
 
 ## Netlify
 
-The checked-in `netlify.toml` publishes `dist` as static files and deploys one function, `netlify/functions/consultation.mjs`, at `/api/consultation`. The build command only runs the form tests, so a failing test stops the deploy. No dependency installation or Next.js adapter is needed.
+The checked-in `netlify.toml` publishes `dist` as static files and deploys one function, `netlify/functions/consultation.mjs`, at `/api/consultation`. The build command only runs the tests, so a failing test stops the deploy. No dependency installation or Next.js adapter is needed.
 
 The function needs two environment variables on this Netlify site, available to Functions in every deploy context:
 
@@ -13,7 +13,7 @@ The function needs two environment variables on this Netlify site, available to 
 
 Without them, every submission is refused and the visitor is asked to call. Netlify applies new values on the next deploy.
 
-The site sends the main site’s `Referrer-Policy` and `Permissions-Policy` headers, plus `X-Content-Type-Options: nosniff`. There is no Content-Security-Policy: the service-area map loads OpenStreetMap tiles, and a policy would have to allow them.
+The site sends the main site’s `Referrer-Policy` and `Permissions-Policy` headers, plus `X-Content-Type-Options: nosniff`. There is no Content-Security-Policy: a policy would have to allow the service-area map’s OpenStreetMap tiles and ClickCease’s script, frame and worker.
 
 ## Local preview
 
@@ -35,8 +35,19 @@ Spam protection, in `consultation.mjs` and `consultation-http.mjs`:
 
 There is no captcha: a visible challenge on a paid-traffic form costs conversions. Refused requests get a message with Howard’s phone number and never reach GHL. The visitor sees the thank-you message only when GHL returns a contact id, and the function passes that id back so ad conversions can be reported for real leads only. Anything else asks the visitor to call (303) 449-4337.
 
-The form has no SMS consent checkboxes, so these leads are not opted in to texts. The page has no Google Ads, Meta or ClickCease tag yet, so form and call conversions are not tracked.
+The form has no SMS consent checkboxes, so these leads are not opted in to texts. The page has no Google Ads or Meta tag yet, so form and call conversions are not tracked.
+
+## ClickCease
+
+ClickCease (CHEQ) click-fraud protection runs on the page with the tag issued for this domain in the ClickCease dashboard: host `ob.sornavellon.com`, hash `f55b4de59e892a78c4939af00208d7e7`. As ClickCease instructs, the script is the first thing in `<head>` after the charset, and its no-JavaScript fallback opens `<body>`.
+
+- The `ct_clicktrue` class is load-bearing. The script finds its own element by that class and reads its configuration from that element’s `src`; without the class it loads and does nothing.
+- The host and hash are issued per domain and cannot be derived. Never copy a tag between sites (Shutter Factory’s is `ob.buzzfighter.com`, Shenandoah’s `ob.buzzfufighter.com`), and never substitute the generic `clickcease.com/monitor/stat.js`.
+- ClickCease blocks fraud by adding IPs to the connected Google Ads account’s exclusion list, so Howard’s Google Ads account must be connected in the dashboard.
+- Proving it fires needs a real browser on the live domain. Its beacons can take up to a minute to appear; the tag in the HTML proves nothing on its own.
+
+`clickcease.test.mjs` pins the tag, its position, the fallback’s hash and the absence of any other tag.
 
 ## Verification
 
-`node --test consultation.test.mjs consultation-http.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards and the rate limit, using a mock transport.
+`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards and the rate limit, using a mock transport, and pins the ClickCease tag.
