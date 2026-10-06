@@ -45,10 +45,10 @@ html{scroll-padding-top:0}#paper-heading{scroll-margin-top:125px}body{background
 #hardwood-made-heading span{display:block;white-space:nowrap}
 @media(max-width:767px){.hardwood-section #hardwood-made-heading{font-size:clamp(22px,6vw,32px)}}
 
-/* Quiet map backdrop with the service communities as the main visual focus. */
+/* Clear community labels and controls over the full-color map. */
 .hardwood-service-area .service-area-map-artwork{border:1px solid #deddd3;border-radius:18px;background:#eeeee8;box-shadow:0 12px 34px -20px #27271f35}
 #coverage-map{height:500px;background:#eeeee8}
-#coverage-map .leaflet-tile-pane{filter:grayscale(.9) saturate(.25);opacity:.48}
+#coverage-map .leaflet-tile-pane{filter:none;opacity:1}
 #coverage-map .coverage-city-marker span{background:#947a32;border:3px solid #fff;box-shadow:0 0 0 1px #947a3255,0 2px 5px #27271f24}
 #coverage-map .coverage-city-label{padding:5px 9px;border:1px solid #e2dfd2;border-radius:20px;background:#fffffff5;color:#35352d;font:600 12px/1.35 Manrope,Arial,sans-serif;box-shadow:0 2px 6px #27271f0d}
 #coverage-map .coverage-city-label:before{display:none}
