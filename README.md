@@ -61,3 +61,13 @@ The page reports to Howard’s Google Ads account, `AW-11359789040`. The Google 
 ## Verification
 
 `node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards and the rate limit, using a mock transport. It also pins the ClickCease and Google Ads tags.
+
+## Landing page photography
+
+The hero, feature image, and three gallery slides use real project photos from https://howardsdraperies.com/gallery/ (selected October 6, 2026), served from the same public image CDN as the main website:
+
+- `IMG_3704_d7b55e53.webp`: sunroom solar roller shades (hero and gallery).
+- `IMG_2381_0e547290.webp`: kitchen and dining area fabric shades (feature and gallery).
+- `IMG_2325_c1caff0f.webp`: pleated skylight shade (gallery).
+
+The older generated image assets are no longer referenced by the landing page.
