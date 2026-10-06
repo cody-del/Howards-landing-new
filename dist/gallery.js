@@ -108,5 +108,3 @@ if ('IntersectionObserver' in window) {
   updateHighlights();
   mobile.addEventListener('change', updateHighlights);
 }
-
-const form=document.querySelector('.hardwood-form');form.addEventListener('submit',e=>{e.preventDefault();const status=form.querySelector('.form-status');status.hidden=false;status.textContent='This preview form is not connected yet. Please call (303) 449-4337. Your details have not been sent.';});

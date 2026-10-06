@@ -1,3 +1,18 @@
 [build]
-  command = ""
   publish = "dist"
+  command = "node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# The same policies howardsdraperies.com sends, plus nosniff.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-Content-Type-Options = "nosniff"
