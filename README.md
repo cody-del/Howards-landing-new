@@ -71,3 +71,5 @@ The hero, feature image, and three gallery slides use real project photos from h
 - `IMG_2325_c1caff0f.webp`: pleated skylight shade (gallery).
 
 The older generated image assets are no longer referenced by the landing page.
+
+Seven additional project photos supplied October 6, 2026 are stored as `dist/assets/project-*.webp`, converted from the supplied HEIC/JPEG files, resized to a 1600-pixel maximum edge, and saved without original metadata. The gallery now contains ten photos.
