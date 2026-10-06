@@ -40,3 +40,7 @@ html{scroll-padding-top:0}#paper-heading{scroll-margin-top:125px}body{background
 @media(max-width:639px){.google-reviews{padding:36px 16px}.google-reviews .review-row{position:relative;display:block;padding-inline:28px}.google-reviews .review-track{grid-auto-columns:100%;gap:14px}.google-reviews .review-card{min-height:310px;padding:24px 20px}.google-reviews .review-arrow{position:absolute;top:145px;z-index:1}.google-reviews .review-arrow[data-review-direction="-1"]{left:-8px}.google-reviews .review-arrow[data-review-direction="1"]{right:-8px}}
 
 .site-footer{justify-content:center}
+
+.hardwood-section #hardwood-made-heading{font-size:clamp(28px,2.8vw,40px)}
+#hardwood-made-heading span{display:block;white-space:nowrap}
+@media(max-width:767px){.hardwood-section #hardwood-made-heading{font-size:clamp(22px,6vw,32px)}}
