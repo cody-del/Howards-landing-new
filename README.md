@@ -53,10 +53,10 @@ ClickCease (CHEQ) click-fraud protection runs on the page with the tag issued fo
 The page reports to Howard’s Google Ads account, `AW-11359789040`. The Google tag loads in `<head>` right after ClickCease.
 
 - **Lead form:** “SS - Submit Lead Form” (`AW-11359789040/EwciCLOgwJMdEPC_4qgq`) fires from `dist/form.js` only after GHL returns a contact id. Its `transaction_id` is `lead_<contactId>`. GHL reuses the id when the same person submits again, so Google counts them once.
-- **No enhanced conversions:** no user data is sent with the conversion. Howard’s privacy policy does not list advertising platforms among the parties it shares personal data with, so update the policy and turn on enhanced conversions in Google Ads before adding a hashed email.
+- **Enhanced conversions:** `form.js` sets the lead's email as Google tag `user_data` right before the conversion. It is lowercased but not hashed, because the tag hashes it in the browser. Email only: the privacy policy (howardsdraperies.com/privacy-policy, updated Oct 12, 2026) discloses a hashed email to Google Ads, and its SMS section promises no mobile information reaches third parties for marketing. Without it, Ads falls back to scraping the form (`ec_mode=a`) and flags "Enhanced conversions has setup issues". To check, the `googleadservices.com/pagead/conversion/11359789040/` hit should carry `ec_mode=c` and `em=tv.1~em.<hash>`, with no `pn.`. The tag refuses user data over plain http (`em=tv.1~ec.e3`).
 - **Phone calls:** `AW-11359789040/h0pSCKD2wZMdEPC_4qgq` with `phone_conversion_number: '(303) 449-4337'`. For visitors from a Google ad, Google swaps in a forwarding number by matching that exact string in the page text. If the displayed number ever changes, change this value in the same commit, character for character, or calls stop being tracked.
 
-`google-ads.test.mjs` pins the tag, both conversion labels, the conversion’s timing, and that every phone number shown on the page matches the call-tracking string. The page has no Meta Pixel.
+`google-ads.test.mjs` pins the tag, both conversion labels, the conversion’s timing, the email-only user data, and that every phone number shown on the page matches the call-tracking string. The page has no Meta Pixel.
 
 ## Verification
 
