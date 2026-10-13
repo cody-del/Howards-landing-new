@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs"
+  command = "node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs"
 
 [build.environment]
   NODE_VERSION = "22"
@@ -16,3 +16,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     X-Content-Type-Options = "nosniff"
+    # Ad landing page: keep it out of Google's organic results so it can't take the
+    # brand's own searches from the main site. Deliberately not blocked in robots.txt,
+    # so Google can crawl the page and see this. Ads are unaffected.
+    X-Robots-Tag = "noindex"
