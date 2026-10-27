@@ -33,8 +33,8 @@ test('each opt-in names the registered business and carries the full disclosure'
 test('the opt-ins sit above the submit button, and the policy links and no-sharing line below', () => {
   assert.ok(form.indexOf('smsMarketing') < form.indexOf('type="submit"'));
   const note = form.slice(form.indexOf('<p class="hardwood-form-note hardwood-consent">'));
-  assert.ok(note.includes('href="https://howardsdraperies.com/privacy-policy/"'));
-  assert.ok(note.includes('href="https://howardsdraperies.com/terms-of-service/"'));
+  assert.ok(note.includes('href="/privacy-policy/"'));
+  assert.ok(note.includes('href="/terms-of-service/"'));
   assert.ok(note.includes('SMS consent is not shared with third parties.'));
 });
 
