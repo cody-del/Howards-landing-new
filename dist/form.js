@@ -12,9 +12,13 @@ const EMAIL = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*
 // to Google Ads, and its SMS section promises no mobile information goes to
 // third parties for marketing, so the phone number is never sent.
 const LEAD_CONVERSION = 'AW-11359789040/EwciCLOgwJMdEPC_4qgq';
+// GA4, howardsdraperies.com's property. index.html configures it on the production
+// host only, and the lead event below is held to the same host.
+const GA4_ID = 'G-GQTBSF9LP1';
+const GA4_HOSTNAME = 'go.howardsdraperies.com';
 let pending = false;
 
-// Reported only for a lead GHL confirmed. The transaction id is keyed by the
+// Reported (to Ads, and to GA4 on production) only for a lead GHL confirmed. The transaction id is keyed by the
 // contact id, which GHL reuses when the same person submits again, so Google
 // counts that person once. Tracking must never hold up or break the form.
 function reportLeadConversion(contactId, email) {
@@ -26,6 +30,9 @@ function reportLeadConversion(contactId, email) {
     const normalized = String(email || '').trim().toLowerCase();
     if (EMAIL.test(normalized)) window.gtag('set', 'user_data', {email: normalized});
     window.gtag('event', 'conversion', {send_to: LEAD_CONVERSION, transaction_id: `lead_${contactId}`});
+    // The main site's GA4 lead event, to GA4 only (send_to) so Ads gets no second
+    // event. No email or phone: these parameters go to Google Analytics.
+    if (window.location?.hostname === GA4_HOSTNAME) window.gtag('event', 'generate_lead', {send_to: GA4_ID, form_type: 'landing_page'});
   } catch {
     // A blocked or broken tag skips the conversion; the lead is already in GHL.
   }
