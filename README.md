@@ -68,6 +68,10 @@ The page reports to Howard’s Google Ads account, `AW-11359789040`. The Google 
 
 `google-ads.test.mjs` pins the tag, both conversion labels, the conversion’s timing, the email-only user data, and that every phone number shown on the page matches the call-tracking string. The page has no Meta Pixel.
 
+## GA4
+
+The page also sends to howardsdraperies.com's GA4 property, `G-GQTBSF9LP1`, so paid traffic, engagement and leads show up there. The `gtag('config', 'G-GQTBSF9LP1')` in `<head>` runs only when the hostname is `go.howardsdraperies.com`, so deploy previews, branch deploys and local copies send it nothing (the same browser-side check as howardsdraperies.com's `src/lib/google-tags.ts`). A confirmed lead also sends one `generate_lead` to GA4 only (`send_to`, `form_type: landing_page`), from the same host only. `google-ads.test.mjs` pins both.
+
 ## Verification
 
 `node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs legal-pages.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag, the SMS consent wording and the legal pages.
