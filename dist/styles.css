@@ -722,6 +722,12 @@
   cursor: wait;
   opacity: 0.65;
 }
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+}
 .hardwood-form .hardwood-form-note {
   margin-top: 16px;
   font-size: 12px;
