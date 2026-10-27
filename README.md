@@ -45,7 +45,7 @@ The form has the same two A2P 10DLC opt-ins as howardsdraperies.com's forms (`cl
 
 ## Privacy Policy and Terms
 
-`/privacy-policy/` and `/terms-of-service/` are copies of howardsdraperies.com's pages, so the form's policy links stay on this domain. The main site owns the wording; the copies keep its text word for word and drop only its markup. When the main site changes either page, run `node legal-pages.mjs` and commit `dist/privacy-policy/` and `dist/terms-of-service/`. The script refuses anything but plain text, headings, lists and links. The build does not run it, so a main-site outage can't stop a deploy. `legal-pages.test.mjs` pins the SMS clauses A2P reviewers read, the noindex tag and the form's links.
+`/privacy-policy/` and `/terms-of-service/` are copies of howardsdraperies.com's pages, so the form's policy links and the footer's stay on this domain. The main site owns the wording; the copies keep its text word for word and drop only its markup. When the main site changes either page, run `node legal-pages.mjs` and commit `dist/privacy-policy/` and `dist/terms-of-service/`. The script refuses anything but plain text, headings, lists and links. The build does not run it, so a main-site outage can't stop a deploy. `legal-pages.test.mjs` pins the SMS clauses A2P reviewers read, the noindex tag, and the form's and footer's links.
 
 ## ClickCease
 

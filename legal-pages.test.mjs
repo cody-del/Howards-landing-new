@@ -45,6 +45,12 @@ test('the consultation form links to these pages, not the main site', async () =
   assert.doesNotMatch(index, /howardsdraperies\.com\/(privacy-policy|terms-of-service)/);
 });
 
+test('the landing page footer links to both pages', async () => {
+  const index = await read('./dist/index.html');
+  const footer = index.slice(index.indexOf('<footer'), index.indexOf('</footer>'));
+  assert.ok(footer.includes('<nav class="site-footer-links" aria-label="Legal"><a href="/privacy-policy/">Privacy Policy</a><a href="/terms-of-service/">Terms of Service</a></nav>'));
+});
+
 test('the rebuild strips the main site\'s markup and refuses anything unexpected', () => {
   assert.equal(
     legalContent('<main id="m"><div class="x"><p class="a">Hi<!-- --> <strong>there</strong> <a href="/privacy-policy/" class="b">P</a> <a href="https://example.com" class="c">E</a><span>·</span></p></div></main>'),
