@@ -37,11 +37,15 @@ There is no captcha: a visible challenge on a paid-traffic form costs conversion
 
 ## SMS consent
 
-The form has the same two A2P 10DLC opt-ins as howardsdraperies.com's forms (`client/src/components/SmsConsentFields.tsx` in `cody-del/howards-draperies`): one for transactional messages and one for marketing and promotional messages. Both are unticked and optional, so they never block a lead. Each names the registered business, `VVD Ventures LLC DBA Howard's Draperies`, and states the message frequency, that message and data rates may apply, and HELP and STOP. Below the button, the note links the main site's Privacy Policy and Terms of Service, whose SMS sections cover these opt-ins, and says SMS consent is not shared with third parties.
+The form has the same two A2P 10DLC opt-ins as howardsdraperies.com's forms (`client/src/components/SmsConsentFields.tsx` in `cody-del/howards-draperies`): one for transactional messages and one for marketing and promotional messages. Both are unticked and optional, so they never block a lead. Each names the registered business, `VVD Ventures LLC DBA Howard's Draperies`, and states the message frequency, that message and data rates may apply, and HELP and STOP. Below the button, the note links the Privacy Policy and Terms of Service on this domain, whose SMS sections cover these opt-ins, and says SMS consent is not shared with third parties.
 
 `form.js` sends both as booleans, `smsTransactional` and `smsMarketing`. A ticked box adds the main site's GHL tag, `SMS Transactional Opt-In` or `SMS Marketing Opt-In`, next to `google_landing_page`, so Howard's texting workflows treat landing page leads the same way. A phone number alone is not consent: any GHL step that texts these leads must check for the matching tag. Change the wording only together with the main site's, and keep it the same as the A2P campaign registration.
 
 `sms-consent.test.mjs` pins the boxes, the wording, the links and the booleans `form.js` sends.
+
+## Privacy Policy and Terms
+
+`/privacy-policy/` and `/terms-of-service/` are copies of howardsdraperies.com's pages, so the form's policy links stay on this domain. The main site owns the wording; the copies keep its text word for word and drop only its markup. When the main site changes either page, run `node legal-pages.mjs` and commit `dist/privacy-policy/` and `dist/terms-of-service/`. The script refuses anything but plain text, headings, lists and links. The build does not run it, so a main-site outage can't stop a deploy. `legal-pages.test.mjs` pins the SMS clauses A2P reviewers read, the noindex tag and the form's links.
 
 ## ClickCease
 
@@ -66,7 +70,7 @@ The page reports to Howard’s Google Ads account, `AW-11359789040`. The Google 
 
 ## Verification
 
-`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag and the SMS consent wording.
+`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs legal-pages.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag, the SMS consent wording and the legal pages.
 
 ## Landing page photography
 

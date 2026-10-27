@@ -1,0 +1,67 @@
+/* The Privacy Policy and Terms pages, built by legal-pages.mjs. Same fonts and
+   colors as the landing page, without its layout. */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+:root {
+  --landing-ink: #27271f;
+  --landing-muted: #63635c;
+  --landing-gold: #947a32;
+  --landing-rule: #dcdcd5;
+  --landing-stone: #f3f3ee;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--landing-stone);
+  color: var(--landing-ink);
+  font: 16px/1.75 Manrope, Arial, sans-serif;
+}
+a { color: #756022; text-underline-offset: 3px; overflow-wrap: anywhere; }
+a:focus-visible { outline: 2px solid var(--landing-gold); outline-offset: 3px; }
+.skip-link { position: fixed; top: -100px; left: 20px; z-index: 10; padding: 12px; background: white; }
+.skip-link:focus { top: 20px; }
+.legal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+.legal-header img { display: block; width: 122px; height: 62px; filter: brightness(0); }
+.legal-phone { color: var(--landing-ink); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.legal {
+  max-width: 900px;
+  margin: 0 auto 64px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+}
+.legal:focus { outline: none; }
+@media (min-width: 720px) { .legal { padding: 56px 64px; } }
+.legal > p:first-child {
+  margin: 0 0 20px;
+  color: var(--landing-muted);
+  font-size: 12px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.legal h1, .legal h2, .legal h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; line-height: 1.2; }
+.legal h1 { margin: 0 0 8px; font-size: clamp(34px, 6vw, 48px); letter-spacing: -.02em; }
+.legal h1 + p { margin: 0 0 32px; color: var(--landing-muted); font-size: 14px; }
+.legal h2 { margin: 40px 0 12px; padding-top: 20px; border-top: 1px solid var(--landing-rule); font-size: 26px; }
+.legal h3 { margin: 24px 0 8px; font-size: 20px; }
+.legal p, .legal li { color: #3a3530; }
+.legal ul { padding-left: 24px; }
+.legal li + li { margin-top: 4px; }
+.legal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  padding: 32px 20px;
+  background: #24241d;
+  font-size: 14px;
+}
+.legal-footer a { color: #eeede7; text-decoration: none; }
+.legal-footer a:hover { color: #d5bf87; text-decoration: underline; }
