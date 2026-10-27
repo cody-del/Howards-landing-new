@@ -41,6 +41,8 @@ async function submitForm({ok = true, body = {success: true, contactId: 'abc123'
   const values = {firstName: 'Jane', lastName: 'Doe', phone: '(303) 555-0100', email};
   const node = () => ({hidden: true, textContent: '', disabled: false, setAttribute() {}, removeAttribute() {}, getAttribute: () => null, addEventListener() {}, focus() {}});
   const elements = Object.fromEntries(Object.entries(values).map(([name, value]) => [name, {...node(), value}]));
+  elements.smsTransactional = {...node(), checked: false};
+  elements.smsMarketing = {...node(), checked: false};
   const listeners = {};
   const form = {...node(), elements, querySelector: node, addEventListener: (name, callback) => { listeners[name] = callback; }, reset() {}};
   const gtag = [];

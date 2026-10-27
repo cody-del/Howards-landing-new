@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {submitConsultation, GHL_UPSERT_URL, LEAD_TAG, LEAD_SOURCE, MIN_FILL_MS} from './consultation.mjs';
+import {submitConsultation, GHL_UPSERT_URL, LEAD_TAG, LEAD_SOURCE, MIN_FILL_MS, SMS_TRANSACTIONAL_TAG, SMS_MARKETING_TAG} from './consultation.mjs';
 
 const env = {GHL_PRIVATE_TOKEN: 'pit-test', GHL_LOCATION_ID: 'location-1'};
 const valid = {firstName: 'Test', lastName: 'Person', phone: '(303) 555-0123', email: 'test@example.com', website: '', elapsedMs: 20000};
@@ -15,6 +15,7 @@ test('incomplete, invalid and spam requests never reach GHL', async () => {
     {...valid, website: 'https://spam.example'},
     {...valid, elapsedMs: undefined}, {...valid, elapsedMs: MIN_FILL_MS - 1},
     {...valid, elapsedMs: '20000'}, {...valid, elapsedMs: 20000.5},
+    {...valid, smsTransactional: 'on'}, {...valid, smsMarketing: 'true'}, {...valid, smsMarketing: 1},
   ]) {
     const result = await submitConsultation(data, {env, fetcher: mustNotCall, rateLimited: mustNotCall});
     assert.equal(result.status, 400);
@@ -42,6 +43,25 @@ test('upserts the contact into GHL tagged google_landing_page and returns its id
   });
   assert.equal(LEAD_TAG, 'google_landing_page');
   assert.equal(LEAD_SOURCE, 'Motorized Shades Page');
+});
+
+test('adds each SMS opt-in tag only when its box was ticked', async () => {
+  const tagsFor = async consent => {
+    let tags;
+    await submitConsultation({...valid, ...consent}, {env, fetcher: async (url, request) => {
+      tags = JSON.parse(request.body).tags;
+      return created();
+    }});
+    return tags;
+  };
+  // The tags howardsdraperies.com/api/leads/ adds, so the same GHL workflows apply.
+  assert.equal(SMS_TRANSACTIONAL_TAG, 'SMS Transactional Opt-In');
+  assert.equal(SMS_MARKETING_TAG, 'SMS Marketing Opt-In');
+  assert.deepEqual(await tagsFor({}), ['google_landing_page']);
+  assert.deepEqual(await tagsFor({smsTransactional: false, smsMarketing: false}), ['google_landing_page']);
+  assert.deepEqual(await tagsFor({smsTransactional: true, smsMarketing: false}), ['google_landing_page', 'SMS Transactional Opt-In']);
+  assert.deepEqual(await tagsFor({smsTransactional: false, smsMarketing: true}), ['google_landing_page', 'SMS Marketing Opt-In']);
+  assert.deepEqual(await tagsFor({smsTransactional: true, smsMarketing: true}), ['google_landing_page', 'SMS Transactional Opt-In', 'SMS Marketing Opt-In']);
 });
 
 test('falls back to GHL_API_KEY, and refuses to send without credentials', async t => {

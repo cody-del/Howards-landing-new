@@ -35,7 +35,13 @@ Spam protection, in `consultation.mjs` and `consultation-http.mjs`:
 
 There is no captcha: a visible challenge on a paid-traffic form costs conversions. Refused requests get a message with Howard’s phone number and never reach GHL. The visitor sees the thank-you message only when GHL returns a contact id, and the function passes that id back so ad conversions can be reported for real leads only. Anything else asks the visitor to call (303) 449-4337.
 
-The form has no SMS consent checkboxes, so these leads are not opted in to texts.
+## SMS consent
+
+The form has the same two A2P 10DLC opt-ins as howardsdraperies.com's forms (`client/src/components/SmsConsentFields.tsx` in `cody-del/howards-draperies`): one for transactional messages and one for marketing and promotional messages. Both are unticked and optional, so they never block a lead. Each names the registered business, `VVD Ventures LLC DBA Howard's Draperies`, and states the message frequency, that message and data rates may apply, and HELP and STOP. Below the button, the note links the main site's Privacy Policy and Terms of Service, whose SMS sections cover these opt-ins, and says SMS consent is not shared with third parties.
+
+`form.js` sends both as booleans, `smsTransactional` and `smsMarketing`. A ticked box adds the main site's GHL tag, `SMS Transactional Opt-In` or `SMS Marketing Opt-In`, next to `google_landing_page`, so Howard's texting workflows treat landing page leads the same way. A phone number alone is not consent: any GHL step that texts these leads must check for the matching tag. Change the wording only together with the main site's, and keep it the same as the A2P campaign registration.
+
+`sms-consent.test.mjs` pins the boxes, the wording, the links and the booleans `form.js` sends.
 
 ## ClickCease
 
@@ -60,7 +66,7 @@ The page reports to Howard’s Google Ads account, `AW-11359789040`. The Google 
 
 ## Verification
 
-`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards and the rate limit, using a mock transport. It also pins the ClickCease and Google Ads tags.
+`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag and the SMS consent wording.
 
 ## Landing page photography
 
