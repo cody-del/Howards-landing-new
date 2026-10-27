@@ -11,6 +11,11 @@ const GHL_VERSION = '2021-07-28';
 export const LEAD_TAG = 'google_landing_page';
 // Page attribution rides on the contact's source, as on Shutter Factory's pages.
 export const LEAD_SOURCE = 'Motorized Shades Page';
+// The SMS opt-in tags howardsdraperies.com/api/leads/ adds, so Howard's texting
+// workflows treat landing page leads the same way. Each is added only when its
+// box was ticked; a phone number alone is not consent.
+export const SMS_TRANSACTIONAL_TAG = 'SMS Transactional Opt-In';
+export const SMS_MARKETING_TAG = 'SMS Marketing Opt-In';
 
 // Submissions sooner than this after the page loads are refused. form.js waits
 // it out, so a person is never caught by it.
@@ -35,6 +40,9 @@ export async function submitConsultation(data, {fetcher = fetch, rateLimited = (
   }
   const phone = data.phone.replace(/\D/g, '');
   if (!/^\d{10}$|^1\d{10}$/.test(phone) || !EMAIL.test(data.email.trim())) return fail(400, 'Please enter a valid phone number and email address.');
+  for (const field of ['smsTransactional', 'smsMarketing']) {
+    if (data[field] !== undefined && typeof data[field] !== 'boolean') return fail(400, 'Please check your contact details.');
+  }
   if (rateLimited()) return fail(429, `Too many requests. Please wait a few minutes or call ${PHONE}.`);
 
   const token = env.GHL_PRIVATE_TOKEN || env.GHL_API_KEY;
@@ -50,7 +58,11 @@ export async function submitConsultation(data, {fetcher = fetch, rateLimited = (
     phone: data.phone.trim(),
     email: data.email.trim().toLowerCase(),
     source: LEAD_SOURCE,
-    tags: [LEAD_TAG],
+    tags: [
+      LEAD_TAG,
+      ...(data.smsTransactional === true ? [SMS_TRANSACTIONAL_TAG] : []),
+      ...(data.smsMarketing === true ? [SMS_MARKETING_TAG] : []),
+    ],
   };
   try {
     const response = await fetcher(GHL_UPSERT_URL, {

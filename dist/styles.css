@@ -676,6 +676,44 @@
   font-size: 13px;
   line-height: 1.5;
 }
+/* SMS opt-ins: both optional and unticked, as on howardsdraperies.com. */
+.hardwood-sms {
+  min-width: 0;
+  margin: 24px 0 0;
+  padding: 0;
+  border: 0;
+}
+.hardwood-sms legend {
+  margin-bottom: 10px;
+  padding: 0;
+  color: var(--landing-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+.hardwood-sms-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--landing-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+.hardwood-sms-option + .hardwood-sms-option {
+  margin-top: 12px;
+}
+.hardwood-sms-option input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--landing-gold);
+  cursor: pointer;
+}
+.hardwood-sms-option strong {
+  color: var(--landing-ink);
+  font-weight: 600;
+}
 .hardwood-submit {
   width: 100%;
   margin-top: 26px;
