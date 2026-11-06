@@ -35,6 +35,15 @@ Spam protection, in `consultation.mjs` and `consultation-http.mjs`:
 
 There is no captcha: a visible challenge on a paid-traffic form costs conversions. Refused requests get a message with Howard’s phone number and never reach GHL. The visitor sees the thank-you message only when GHL returns a contact id, and the function passes that id back so ad conversions can be reported for real leads only. Anything else asks the visitor to call (303) 449-4337.
 
+## Cloudflare Turnstile
+
+`dist/form.js` adds an invisible Cloudflare Turnstile human check to the consultation form; visitors only see a checkbox if Cloudflare wants one. `turnstile.mjs` checks the token in the function (`consultation-http.mjs`) before anything reaches GoHighLevel, refuses the lead with a 403 when the token is missing or refused, and never passes the token on. If Cloudflare can't be reached (3-second timeout, HTTP error or a non-JSON answer), the lead goes through rather than being lost. A token older than 270 seconds (Cloudflare honours them for 300) is refreshed before sending.
+
+- Widget: "Howards Draperies lead forms" in the gbp@shadestrategy.com Cloudflare account (Managed mode, shared with howardsdraperies.com).
+- Site key: `0x4AAAAAAF2pk6Gwsff3y1Q9` (public, in `form.js`), used only on `go.howardsdraperies.com`. Every other host, such as deploy previews and localhost, uses Cloudflare's always-pass test key `1x00000000000000000000AA` and needs no secret.
+- Secret: the Netlify variable `TURNSTILE_SECRET_KEY` on `howardsnewlanding` (Production context, Functions scope, marked secret). Without it the check is off. Functions read it at deploy time, so redeploy after setting it.
+- The Privacy Policy here is a copy of the main site's (`legal-pages.mjs`), so it will mention Turnstile once howardsdraperies.com's policy does and the copy is refreshed.
+
 ## SMS consent
 
 The form has the same two A2P 10DLC opt-ins as howardsdraperies.com's forms (`client/src/components/SmsConsentFields.tsx` in `cody-del/howards-draperies`): one for transactional messages and one for marketing and promotional messages. Both are unticked and optional, so they never block a lead. Each names the registered business, `VVD Ventures LLC DBA Howard's Draperies`, and states the message frequency, that message and data rates may apply, and HELP and STOP. Below the button, the note links the Privacy Policy and Terms of Service on this domain, whose SMS sections cover these opt-ins, and says SMS consent is not shared with third parties.
@@ -74,7 +83,7 @@ The page also sends to howardsdraperies.com's GA4 property, `G-GQTBSF9LP1`, so p
 
 ## Verification
 
-`node --test consultation.test.mjs consultation-http.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs legal-pages.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag, the SMS consent wording and the legal pages.
+`node --test consultation.test.mjs consultation-http.test.mjs turnstile.test.mjs clickcease.test.mjs google-ads.test.mjs landing-noindex.test.mjs sms-consent.test.mjs legal-pages.test.mjs` checks validation, spam rejection, the contact sent to GHL, credential handling, confirmed-success handling, the HTTP guards, the rate limit and the SMS opt-in tags, using a mock transport. It also pins the ClickCease and Google Ads tags, the noindex tag, the SMS consent wording and the legal pages.
 
 ## Landing page photography
 
