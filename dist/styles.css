@@ -1150,3 +1150,15 @@
 /* Howard’s branding; layout dimensions inherited from the reference page. */
 .paper-logo,.site-footer>img{filter:brightness(0);width:154px;height:70px}.paper-header-phone svg path{fill:#444d40}.review-quote{font:52px/1 Georgia,serif;color:#a38046;margin:16px 0 0}.review-summary>span{font-size:14px;color:#60665b}.review-summary>strong{font-family:Lora,Georgia,serif;font-weight:500}.review-card{min-height:245px}.review-card p{font-size:15px}.review-avatar{background:#eceee5;color:#4a553f}.paper-reviews{min-height:380px}.paper-rating-score{white-space:nowrap}.hardwood-google-badge{display:none}.skip-link{position:fixed;top:-100px;left:20px;background:white;padding:12px;z-index:50}.skip-link:focus{top:20px}.hardwood-form-note{background:#f5f4ee;padding:12px;border-radius:8px}.hardwood-submit{cursor:pointer}.hardwood-consultation .hardwood-form-note{color:#686e62}.site-footer>img{height:80px;width:160px}.hardwood-service-area .service-area-map iframe{height:480px}.paper-ratings{width:min(100%,660px)}
 @media(max-width:600px){.paper-logo{width:100%;height:49px}.paper-rating-score{font-size:13px;white-space:normal}.paper-header{grid-template-columns:minmax(70px,105px) max-content}.review-card{min-height:240px}.hardwood-service-area .service-area-map iframe{height:430px}}
+
+/* Cloudflare Turnstile widget above the submit button (invisible unless Cloudflare asks for a tick). */
+.lead-form-turnstile {
+  margin-top: 22px;
+  max-width: 100%;
+}
+.lead-form-turnstile:empty {
+  display: none;
+}
+.hardwood-form .lead-form-turnstile + .hardwood-submit {
+  margin-top: 14px;
+}

@@ -1,4 +1,7 @@
 import {submitConsultation} from './consultation.mjs';
+import {TOKEN_FIELD, verifyHuman} from './turnstile.mjs';
+
+const PHONE = '(303) 449-4337';
 
 // The same limit howardsdraperies.com/api/leads/ applies per visitor (5 per 15
 // minutes). That route only ever sees this function's address, so the
@@ -18,7 +21,7 @@ export function createRateLimiter({windowMs = 15 * 60 * 1000, max = 5} = {}) {
   };
 }
 
-export function createConsultationHandler(submit = submitConsultation, rateLimited = createRateLimiter()) {
+export function createConsultationHandler(submit = submitConsultation, rateLimited = createRateLimiter(), isHuman = verifyHuman) {
   return async (request, context) => {
     const send = (status, body, headers = {}) => Response.json(body, {
       status, headers: {'Cache-Control': 'no-store', ...headers},
@@ -49,6 +52,13 @@ export function createConsultationHandler(submit = submitConsultation, rateLimit
       return send(400, {error: 'Invalid request.'});
     }
     const ip = context?.ip ?? request.headers.get('x-nf-client-connection-ip') ?? 'unknown';
+    // The Turnstile token is checked here and never passed on: copy the answers without it.
+    const token = data?.[TOKEN_FIELD];
+    if (data && typeof data === 'object' && !Array.isArray(data) && Object.hasOwn(data, TOKEN_FIELD)) {
+      const {[TOKEN_FIELD]: _token, ...answers} = data;
+      data = answers;
+    }
+    if (!(await isHuman(token, ip))) return send(403, {success: false, error: `We couldn’t confirm this request came from a person. Please try again, or call ${PHONE}.`});
     const result = await submit(data, {rateLimited: () => rateLimited(ip)});
     return send(result.status, result.body);
   };

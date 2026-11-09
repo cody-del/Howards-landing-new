@@ -2,6 +2,10 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createConsultationHandler, createRateLimiter} from './consultation-http.mjs';
 
+// These tests post without a Turnstile token; keep a build's real TURNSTILE_SECRET_KEY
+// (Netlify may give it to production builds) from switching the human check on here.
+delete process.env.TURNSTILE_SECRET_KEY;
+
 const origin = 'https://go.howardsdraperies.com';
 const request = (body = '{}', headers = {}) => new Request(`${origin}/api/consultation`, {
   method: 'POST', headers: {'Origin': origin, 'Content-Type': 'application/json', ...headers}, body,
